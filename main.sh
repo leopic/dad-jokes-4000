@@ -54,3 +54,7 @@ done
 
 ./telegram "$JOKE_TEXT"
 mark_seen "$JOKE_ID"
+
+if [[ -n "${GITHUB_ENV:-}" ]]; then
+  printf 'JOKE_TEXT<<JOKE_EOF\n%s\nJOKE_EOF\n' "$JOKE_TEXT" >> "$GITHUB_ENV"
+fi
