@@ -5,7 +5,7 @@ on:
     # Every 2 hours, Mon-Fri, 10:00-16:00 Berlin time (CEST/UTC+2 -> 08-14 UTC).
     # Minute 7 avoids the top-of-the-hour peak that GitHub delays/drops.
     # NOTE: GitHub cron is UTC only; in winter (CET/UTC+1) these shift 1h earlier locally.
-    - cron: "7 8-14/2 * * 1-5"
+    - cron: "7 8-17/2 * * 1-5"
   push:
     branches:
       - 'main'
