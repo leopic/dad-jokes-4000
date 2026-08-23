@@ -1,14 +1,11 @@
-name: CI
+name: Poll for joke requests
 
 on:
   schedule:
-    # Every 2 hours, Mon-Fri, 10:00-16:00 Berlin time (CEST/UTC+2 -> 08-14 UTC).
-    # Minute 7 avoids the top-of-the-hour peak that GitHub delays/drops.
-    # NOTE: GitHub cron is UTC only; in winter (CET/UTC+1) these shift 1h earlier locally.
-    - cron: "7 8-17/2 * * 1-5"
-  push:
-    branches:
-      - 'main'
+    # Every 5 minutes, Mon-Fri, 8:00-20:00 Berlin time (CEST/UTC+2 -> 6-17 UTC).
+    # NOTE: GitHub cron is UTC only; in winter (CET/UTC+1) this shifts 1h
+    # earlier locally, i.e. 7:00-19:00 Berlin.
+    - cron: "*/5 6-17 * * 1-5"
   workflow_dispatch:
 
 concurrency:
@@ -22,7 +19,7 @@ env:
   TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
 
 jobs:
-  build:
+  poll:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,13 +28,13 @@ jobs:
           repository: fabianonline/telegram.sh
           path: telegram.sh
       - run: mv telegram.sh/telegram .
-      - run: ./main.sh
-      - name: Commit seen jokes
+      - run: ./poll.sh
+      - name: Commit updated state
         env:
           JOKE_TEXT: ${{ env.JOKE_TEXT }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add seen.json
-          git diff --cached --quiet || git commit -m "chore: mark joke as seen" -m "$JOKE_TEXT"
+          git add offset.json seen.json
+          git diff --cached --quiet || git commit -m "chore: poll for joke request" -m "$JOKE_TEXT"
           git push
