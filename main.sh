@@ -101,5 +101,8 @@ fi
 mark_seen "$JOKE_ID" "$JOKE_KEY"
 
 if [[ -n "${GITHUB_ENV:-}" ]]; then
-  printf 'JOKE_TEXT<<JOKE_EOF\n%s\nJOKE_EOF\n' "$JOKE_TEXT" >> "$GITHUB_ENV"
+  # Random delimiter: joke text comes from third parties, and a line equal to
+  # a fixed delimiter would let it set other env vars for later steps.
+  delim="JOKE_EOF_$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')"
+  printf 'JOKE_TEXT<<%s\n%s\n%s\n' "$delim" "$JOKE_TEXT" "$delim" >> "$GITHUB_ENV"
 fi
