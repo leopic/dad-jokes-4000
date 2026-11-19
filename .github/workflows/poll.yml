@@ -30,6 +30,9 @@ jobs:
       - run: mv telegram.sh/telegram .
       - run: ./poll.sh
       - name: Commit updated state
+        # Also after a failed poll.sh (e.g. no new joke): offset.json must be
+        # saved, or the same /joke request is retried on every poll.
+        if: ${{ !cancelled() }}
         env:
           JOKE_TEXT: ${{ env.JOKE_TEXT }}
         run: |
