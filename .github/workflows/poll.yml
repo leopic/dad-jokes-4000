@@ -1,11 +1,14 @@
 name: Poll for joke requests
 
 on:
-  schedule:
-    # Every 5 minutes, Mon-Fri, 8:00-20:00 Berlin time (CEST/UTC+2 -> 6-17 UTC).
-    # NOTE: GitHub cron is UTC only; in winter (CET/UTC+1) this shifts 1h
-    # earlier locally, i.e. 7:00-19:00 Berlin.
-    - cron: "*/5 6-17 * * 1-5"
+  # Schedule paused since 2026-11-19. After it was added (2026-08-23), GitHub
+  # started only ~10 of 25 weekly scheduled main.yml runs, down to 4 by
+  # November. Testing whether the 5-minute cron is why. Manual runs still work.
+  # schedule:
+  #   # Every 5 minutes, Mon-Fri, 8:00-20:00 Berlin time (CEST/UTC+2 -> 6-17 UTC).
+  #   # NOTE: GitHub cron is UTC only; in winter (CET/UTC+1) this shifts 1h
+  #   # earlier locally, i.e. 7:00-19:00 Berlin.
+  #   - cron: "*/5 6-17 * * 1-5"
   workflow_dispatch:
 
 concurrency:
